@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: JD API
+  description: General api for jd portfolio.
+  version: 1.0.0
+
+servers:
+  - url: http://josephdedrick.com/api
+    description: Optional server description, e.g. Main (production) server
+  # - url: http://staging-api.example.com
+  #   description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /contact:
+    post:
+      summary: Send email
+      description: Send an email
+      requestBody:
+        content:
+          application/json:
+            schema:      # Request body contents
+              $ref: '#/components/schemas/Email'
+            example:   # Sample object
+              name: Joe 
+              email: test@test.com
+              messsage: This is a test message
+      responses:
+        200:
+          description: OK 
+        400:
+          description: The email could not be sent.  Are all fields included.
+        404:
+          description: Problem sending the message
+        default:
+          description: Unexpected error
+            
+  /playlist/{id}:
+    get:
+      summary: Returns a list of videos
+      description: Fetch video playlist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type : string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        400:
+          description: The specified playlist ID is invalid (e.g. not a number).
+        404:
+          description: A playlist with the specified ID was not found.
+        default:
+          description: Unexpected error
+
+components:
+  schemas:
+    Email:
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        message:
+          type: string
+      required:
+        - name
+        - email
+        - message
+    Playlist:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          title: 
+            type: string
+          description: 
+            type: string
+          thumbnails: 
+            type: object
+          published: 
+            type: string
